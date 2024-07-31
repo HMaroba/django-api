@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status, generics
-from node_api.models import NoteModel, AuthorModel
-from node_api.serializers import NoteSerializer, AuthorSerializer
+from node_api.models import NoteModel, AuthorModel, UserModel
+from node_api.serializers import NoteSerializer, AuthorSerializer, UserSerializer
 import math
 from datetime import datetime
 
@@ -147,4 +147,40 @@ class AuthorDetail(generics.GenericAPIView):
 
         author.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class Users(generics.GenericAPIView):
+    serializer_class = UserSerializerr
+    queryset = UserModel.objects.all()
+
+    def get(self, request):
+        page_num = int(request.GET.get("page", 1))
+        limit_num = int(request.GET.get("limit", 10))
+        start_num = (page_num - 1) * limit_num
+        end_num = limit_num * page_num
+        search_param = request.GET.get("search")
+        authors = AuthorModel.objects.all()
+        total_authors = authors.count()
+        if search_param:
+            authors = authors.filter(name__icontains=search_param)
+        serializer = self.serializer_class(authors[start_num:end_num], many=True)
+        return Response({
+            "status": "success",
+            "total": total_authors,
+            "page": page_num,
+            "last_page": math.ceil(total_authors / limit_num),
+            "authors": serializer.data
+        })
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data": {"author": serializer.data}}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"status": "fail", "message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 
