@@ -29,7 +29,8 @@ ALLOWED_HOSTS = []
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    'vercel.app'
+    'vercel.app',
+    'https://django-api-red.vercel.app/'
 ]
 CORS_ALLOW_CREDENTIALS = True
 
