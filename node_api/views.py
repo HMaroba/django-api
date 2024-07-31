@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status, generics
-from node_api.models import NoteModel
-from node_api.serializers import NoteSerializer
+from node_api.models import NoteModel, AuthorModel
+from node_api.serializers import NoteSerializer, AuthorSerializer
 import math
 from datetime import datetime
 
@@ -75,5 +75,43 @@ class NoteDetail(generics.GenericAPIView):
             return Response({"status": "fail", "message": f"Note with Id: {pk} not found"}, status=status.HTTP_404_NOT_FOUND)
 
         note.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class AuthorDetail(generics.GenericAPIView):
+    queryset = AuthorModel.objects.all()
+    serializer_class = AuthorSerializer
+
+    def get_author(self, pk):
+        try:
+            return AuthorModel.objects.get(pk=pk)
+        except:
+            return None
+
+    def get(self, request, pk):
+        author = self.get_author(pk=pk)
+        if author == None:
+            return Response({"status": "fail", "message": f"Author with Id: {pk} not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(author)
+        return Response({"status": "success", "data": {"author": serializer.data}})
+
+    def patch(self, request, pk):
+        author = self.get_author(pk)
+        if author == None:
+            return Response({"status": "fail", "message": f"Author with Id: {pk} not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(author, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.validated_data['updatedAt'] = datetime.now()
+            serializer.save()
+            return Response({"status": "success", "data": {"author": serializer.data}})
+        return Response({"status": "fail", "message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        author = self.get_author(pk)
+        if author == None:
+            return Response({"status": "fail", "message": f"Author with Id: {pk} not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        author.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
