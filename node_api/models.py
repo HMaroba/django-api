@@ -16,6 +16,21 @@ class AuthorModel(models.Model):
     def __str__(self) -> str:
         return self.name
 
+class UsersModel(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    password = models.TextField(null=True, blank=True)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "users"
+        ordering = ['name']
+
+    def __str__(self) -> str:
+        return self.name
+
 class NoteModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, unique=True)
