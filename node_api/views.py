@@ -159,17 +159,17 @@ class Users(generics.GenericAPIView):
         start_num = (page_num - 1) * limit_num
         end_num = limit_num * page_num
         search_param = request.GET.get("search")
-        authors = AuthorModel.objects.all()
-        total_authors = authors.count()
+        users = UserModel.objects.all()
+        total_users = users.count()
         if search_param:
-            authors = authors.filter(name__icontains=search_param)
-        serializer = self.serializer_class(authors[start_num:end_num], many=True)
+            users = users.filter(name__icontains=search_param)
+        serializer = self.serializer_class(users[start_num:end_num], many=True)
         return Response({
             "status": "success",
-            "total": total_authors,
+            "total": total_users,
             "page": page_num,
-            "last_page": math.ceil(total_authors / limit_num),
-            "authors": serializer.data
+            "last_page": math.ceil(total_users / limit_num),
+            "users": serializer.data
         })
 
     def post(self, request):
