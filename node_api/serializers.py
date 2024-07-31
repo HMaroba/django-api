@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from node_api.models import NoteModel, AuthorModel, UsersModel
+from node_api.models import NoteModel, AuthorModel, UserModel
 
 
 class NoteSerializer(serializers.ModelSerializer):
@@ -14,5 +14,5 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UsersModel
+        model = UserModel
         fields = '__all__'

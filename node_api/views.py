@@ -148,7 +148,6 @@ class AuthorDetail(generics.GenericAPIView):
         author.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class Users(generics.GenericAPIView):
     serializer_class = UserSerializerr
     queryset = UserModel.objects.all()
