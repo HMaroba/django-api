@@ -149,7 +149,7 @@ class AuthorDetail(generics.GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class Users(generics.GenericAPIView):
-    serializer_class = UserSerializerr
+    serializer_class = UserSerializer
     queryset = UserModel.objects.all()
 
     def get(self, request):
