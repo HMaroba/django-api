@@ -21,7 +21,7 @@ class NoteModel(models.Model):
     title = models.CharField(max_length=255, unique=True)
     content = models.TextField()
     category = models.CharField(max_length=100, null=True, blank=True)
-    author = models.ForeignKey(AuthorModel, on_delete=models.CASCADE, related_name='notes')
+    # author = models.ForeignKey(AuthorModel, on_delete=models.CASCADE, related_name='notes')
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
