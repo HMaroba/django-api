@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import status, generics
+from rest_framework import status, generics, permissions
 from node_api.models import NoteModel, AuthorModel, UserModel
 from node_api.serializers import NoteSerializer, AuthorSerializer, UserSerializer
 import math
@@ -9,6 +9,7 @@ from datetime import datetime
 class Notes(generics.GenericAPIView):
     serializer_class = NoteSerializer
     queryset = NoteModel.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         page_num = int(request.GET.get("page", 1))
